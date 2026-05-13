@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VNU-IS Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
+        body { min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #0f172a; overflow: hidden; }
+        
+        .bg-shapes { position: absolute; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; top:0; left:0; }
+        .shape1 { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, #0066ff 0%, transparent 70%); top: -200px; left: -150px; opacity: 0.5; animation: float 10s ease-in-out infinite alternate; }
+        .shape2 { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, #ff3366 0%, transparent 70%); bottom: -250px; right: -150px; opacity: 0.3; animation: float 12s ease-in-out infinite alternate-reverse; }
+
+        @keyframes float { 0% { transform: translateY(0px) scale(1); } 100% { transform: translateY(50px) scale(1.1); } }
+
+        .login-box {
+            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 50px 40px;
+            width: 400px; z-index: 1; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .logo-icon { font-size: 40px; color: #0066ff; margin-bottom: 20px; }
+        h2 { color: white; font-size: 28px; font-weight: 800; margin-bottom: 5px; }
+        p.subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
+
+        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
+        .input-group i { position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: #64748b; font-size: 14px;}
+        .input-group input {
+            width: 100%; padding: 15px 15px 15px 40px; border-radius: 10px; border: 1px solid #334155;
+            background: rgba(15, 23, 42, 0.6); color: white; font-size: 14px; outline: none; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: #0066ff; box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.2); }
+
+        .btn-login {
+            width: 100%; padding: 15px; background: linear-gradient(135deg, #0066ff, #00d4ff);
+            border: none; border-radius: 10px; color: white; font-weight: 800; font-size: 16px;
+            cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 102, 255, 0.4);
+            margin-top: 10px;
+        }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 102, 255, 0.6); }
+
+        #error-msg { color: #ff3366; font-size: 13px; margin-top: 15px; font-weight: 600; min-height: 20px; display: block;}
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape1"></div>
+        <div class="shape2"></div>
+    </div>
+
+    <div class="login-box">
+        <i class="fa-solid fa-shield-halved logo-icon"></i>
+        <h2>VNU-IS Portal</h2>
+        <p class="subtitle">Hệ thống Quản lý & Mô phỏng Sinh viên</p>
+
+        <div class="input-group">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="username" placeholder="Tên đăng nhập (ID Giảng viên)" value="admin">
+        </div>
+        <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="password" placeholder="Mật khẩu" value="vnu123">
+        </div>
+
+        <button class="btn-login" onclick="doLogin()">Đăng Nhập Hệ Thống</button>
+        <span id="error-msg"></span>
+    </div>
+
+    <script>
+        async function doLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorSpan = document.getElementById('error-msg');
+            const btn = document.querySelector('.btn-login');
+
+            if(!user || !pass) {
+                errorSpan.innerText = "Vui lòng nhập đủ thông tin!";
+                return;
+            }
+
+            btn.innerText = "Đang xác thực...";
+            
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: user, password: pass})
+                });
+                const data = await res.json();
+
+                if(data.status === 'success') {
+                    errorSpan.style.color = '#10b981'; // Màu xanh lá
+                    errorSpan.innerText = "Đăng nhập thành công! Đang chuyển hướng...";
+                    setTimeout(() => { window.location.href = '/dashboard'; }, 1000);
+                } else {
+                    errorSpan.style.color = '#ff3366';
+                    errorSpan.innerText = data.message;
+                    btn.innerText = "Đăng Nhập Hệ Thống";
+                }
+            } catch (err) {
+                errorSpan.innerText = "Lỗi kết nối máy chủ!";
+                btn.innerText = "Đăng Nhập Hệ Thống";
+            }
+        }
+
+        // Bắt sự kiện ấn phím Enter
+        document.getElementById('password').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') doLogin();
+        });
+    </script>
+</body>
+</html>

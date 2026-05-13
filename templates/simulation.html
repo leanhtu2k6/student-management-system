@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Algorithm Space Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+    
+    <div class="animated-bg">
+        <div class="tech-grid-bg"></div>
+    </div>
+
+    <div class="glass-container Pro-Tech">
+        <div class="controls panel Pro-Tech">
+            <h1>Algorithm<br><span>SPACE VISUALIZER</span></h1>
+            <p class="subtitle">VNU-IS | Algorithm Simulation Lab</p>
+            
+            <div class="mode-selector">
+                <label class="switch">
+                    <input type="checkbox" id="stepMode">
+                    <span class="slider round"></span>
+                </label>
+                <span class="mode-text">Mô phỏng Step-by-Step</span>
+            </div>
+
+            <div class="form-group clean">
+                <h3>Thêm Sinh Viên Mới</h3>
+                <input type="text" id="stuId" placeholder="Mã sinh viên (ID)">
+                <input type="text" id="stuName" placeholder="Họ và Tên">
+                <input type="number" id="stuGpa" placeholder="GPA (0.0 - 4.0)" step="0.1" max="4.0">
+                <button onclick="addStudent()" class="btn-primary Pro-Tech">Push to Storage</button>
+            </div>
+
+            <div class="form-group clean">
+                <h3>Thao Tác Hệ Thống</h3>
+                <div class="flex-row gap-10">
+                    <input type="text" id="delId" placeholder="ID cần xóa">
+                    <button onclick="deleteStudent()" class="btn-danger Pro-Tech">Pop & Discard</button>
+                </div>
+                <button onclick="sortStack()" class="btn-special Pro-Tech">Dual-Stack Sort (GPA)</button>
+            </div>
+
+            <div id="status-bar" class="message-box Pro-Tech">Hệ thống đã sẵn sàng.</div>
+        </div>
+
+        <div class="visualizer-area panel Pro-Tech flex-col">
+            <div class="metrics-dashboard Pro-Tech">
+                <div class="metric-card Pro-Tech">
+                    <div class="metric-icon-title">
+                        <div class="records-icon anim-records"></div>
+                        <div class="metric-title">TOTAL RECORDS</div>
+                    </div>
+                    <div class="metric-value" id="total-students" style="color: #0066ff;">0</div>
+                    <div class="metric-desc">Trong Main Stack</div>
+                </div>
+                <div class="metric-card Pro-Tech">
+                    <div class="metric-icon-title">
+                        <div class="ops-icon anim-ping-pong"></div>
+                        <div class="metric-title">MEMORY OPERATIONS</div>
+                    </div>
+                    <div class="metric-value" id="ping-pong-count" style="color: #7b2cbf;">0</div>
+                    <div class="metric-desc">Lượt di chuyển</div>
+                </div>
+                <div class="metric-card Pro-Tech">
+                    <div class="metric-icon-title">
+                        <div class="complexity-icon anim-complexity"></div>
+                        <div class="metric-title">SORT COMPLEXITY</div>
+                    </div>
+                    <div class="metric-value" style="color: #ff3366; font-size: 20px; line-height: 42px;">O(N²)</div>
+                    <div class="metric-desc">Worst-case scenario</div>
+                </div>
+            </div>
+
+            <div class="visualizer-main Pro-Tech flex-row justify-around align-stretch">
+                <div class="stack-box Pro-Tech flex-col">
+                    <div class="stack-label" style="color: #0066ff;">MAIN STACK (Storage)</div>
+                    <div class="stack-container" id="main-container"></div>
+                    <div class="stack-base Pro-Tech main-core">
+                        <div class="storage-core anim-core-pulse"></div>
+                        STORAGE LAYER CORE
+                    </div>
+                </div>
+
+                <div class="stack-box Pro-Tech flex-col">
+                    <div class="stack-label" style="color: #ff3366;">TEMP STACK (Buffer)</div>
+                    <div class="stack-container temp" id="temp-container"></div>
+                    <div class="stack-base Pro-Tech temp-core">
+                        <div class="buffer-core anim-core-pulse-alt"></div>
+                        BUFFER LAYER CORE
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

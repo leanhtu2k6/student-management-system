@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - VNU-IS Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>VNU-IS<span>.Portal</span></h2>
+        </div>
+        <nav>
+            <a href="#" class="nav-link active"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="/simulation" class="nav-link special"><i class="fa-solid fa-wand-magic-sparkles"></i> Mô phỏng Stack</a>
+            <a href="#" onclick="doLogout()" class="nav-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="top-bar">
+            <div class="user-info">
+                <div style="width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <div>
+                    <p style="font-size: 14px; font-weight: 800;">Lê Anh Tú</p>
+                    <p style="font-size: 11px; color: #64748b;">Giảng viên Khoa CNTT</p>
+                </div>
+            </div>
+            <button class="btn btn-add" onclick="showModal()">+ Thêm sinh viên</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Tổng số sinh viên</h4>
+                <p class="value" id="count-val">0</p>
+            </div>
+            <div class="stat-card">
+                <h4>GPA Trung bình</h4>
+                <p class="value" id="gpa-val">0.0</p>
+            </div>
+            <div class="stat-card">
+                <h4>Trạng thái tệp</h4>
+                <p class="value" style="font-size: 18px; color: #10b981;">● students.csv Online</p>
+            </div>
+        </div>
+
+        <div class="data-table-container">
+            <div class="table-header">
+                <h3>Danh sách sinh viên lớp AIT2022A</h3>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="searchInput" class="search-box" placeholder="🔍 Nhập ID để tìm kiếm nhanh..." onkeyup="searchStudent()">
+                    <button class="btn btn-edit" onclick="sortData()"><i class="fa-solid fa-arrow-down-9-1"></i> Sắp xếp GPA</button>
+                </div>
+            </div>
+            
+            <div class="table-scroll">
+                <table id="student-table">
+                    <thead>
+                        <tr>
+                            <th>Mã SV (ID)</th>
+                            <th>Họ và Tên</th>
+                            <th>Điểm GPA</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <h3 id="modal-title" style="margin-bottom: 20px;">Thông tin sinh viên</h3>
+            <input type="text" id="mId" placeholder="Mã số sinh viên">
+            <input type="text" id="mName" placeholder="Họ và tên">
+            <input type="number" id="mGpa" placeholder="Điểm GPA" step="0.1">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-add" style="flex: 1;" onclick="submitStudent()">Lưu lại</button>
+                <button class="btn btn-edit" style="flex: 1;" onclick="hideModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>
